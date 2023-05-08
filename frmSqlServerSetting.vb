@@ -38,6 +38,8 @@ Public Class frmSqlServerSetting
                 sqlCon = New SqlConnection("Data source=" & cmbServerName.Text & ";Initial Catalog=master;Integrated Security=True;")
             End If
             If cmbAuthentication.SelectedIndex = 1 Then
+
+
                 sqlCon = New SqlConnection("Data Source=" & cmbServerName.Text.Trim & ";Initial Catalog=master;User ID=" & txtUserName.Text.Trim & ";Password=" & txtPassword.Text & "")
             End If
             sqlCon.Open()
@@ -53,7 +55,7 @@ Public Class frmSqlServerSetting
                             sw.WriteLine("Data Source=" & cmbServerName.Text.Trim & ";Initial Catalog=0218_DB;User ID=" & txtUserName.Text.Trim & ";Password=" & txtPassword.Text & "")
                             sw.Close()
                         End If
-                        CreateDB()
+                        'CreateDB()
                     End Using
                 Else
                     End
@@ -210,6 +212,8 @@ Public Class frmSqlServerSetting
         Try
             sqlCon = New SqlConnection("Data source=" & cmbServerName.Text & ";Initial Catalog=master;Integrated Security=True;MultipleActiveResultSets=True")
             sqlCon.Open()
+
+
             Dim cb2 As String = "Select * from sysdatabases where name='0218_DB'"
             cmd = New SqlCommand(cb2)
             cmd.Connection = sqlCon
@@ -297,7 +301,7 @@ Public Class frmSqlServerSetting
                             sw.WriteLine("Data Source=" & cmbServerName.Text.Trim & ";Initial Catalog=0218_DB;User ID=" & txtUserName.Text.Trim & ";Password=" & txtPassword.Text & ";MultipleActiveResultSets=True")
                             sw.Close()
                         End If
-                        CreateBlankDB()
+                        'CreateBlankDB()
                         MessageBox.Show("DB has been created and SQL Server setting has been saved successfully..." & vbCrLf & "Application will be closed,Please start it again", "", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         End
                     End Using
@@ -329,10 +333,37 @@ Public Class frmSqlServerSetting
     End Sub
 
     Private Sub frmSqlServerSetting_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        End
+        'End
     End Sub
 
     Private Sub frmSqlServerSetting_Load(sender As Object, e As EventArgs) Handles Me.Load
         theme.myCustomSkinDark(Me)
+        Try
+
+            Cursor = Cursors.WaitCursor
+            Timer1.Enabled = True
+
+
+
+
+            If Not System.IO.File.Exists(Application.StartupPath & "\SQLSettings.dat") Then
+                File.Create(Application.StartupPath & "\SQLSettings.dat").Dispose()
+                Using sw As StreamWriter = New StreamWriter(Application.StartupPath & "\SQLSettings.dat")
+
+
+                    sw.WriteLine("Data Source=localhost;Initial Catalog=0218_DB;User ID=sa;Password=xxx;MultipleActiveResultSets=True")
+                    sw.Close()
+
+
+                End Using
+                Application.Restart()
+            End If
+
+
+        Catch ex As Exception
+            MessageBox.Show("Unable to create to sql server settings" + vbCrLf + Err.Description, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+
+        End Try
     End Sub
 End Class

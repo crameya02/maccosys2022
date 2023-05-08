@@ -12,6 +12,7 @@ Module ModConn
     Public cnString As String = ""
     Public query As String
     Dim st As String
+
     Public Function ReadCS() As String
         Using sr As StreamReader = New StreamReader(Application.StartupPath & "\SQLSettings.dat")
             st = sr.ReadLine()

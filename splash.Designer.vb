@@ -23,6 +23,7 @@ Partial Class splash
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(splash))
         Me.lblSet = New MaterialSkin.Controls.MaterialLabel()
         Me.SplashLoader = New MaterialSkin.Controls.MaterialProgressBar()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
@@ -61,17 +62,18 @@ Partial Class splash
         '
         'MaterialLabel1
         '
+        Me.MaterialLabel1.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.MaterialLabel1.AutoSize = True
         Me.MaterialLabel1.Depth = 0
-        Me.MaterialLabel1.Font = New System.Drawing.Font("Roboto", 48.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel)
-        Me.MaterialLabel1.FontType = MaterialSkin.MaterialSkinManager.fontType.H3
+        Me.MaterialLabel1.Font = New System.Drawing.Font("Roboto Light", 60.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel)
+        Me.MaterialLabel1.FontType = MaterialSkin.MaterialSkinManager.fontType.H2
         Me.MaterialLabel1.HighEmphasis = True
-        Me.MaterialLabel1.Location = New System.Drawing.Point(34, 201)
+        Me.MaterialLabel1.Location = New System.Drawing.Point(284, 172)
         Me.MaterialLabel1.MouseState = MaterialSkin.MouseState.HOVER
         Me.MaterialLabel1.Name = "MaterialLabel1"
-        Me.MaterialLabel1.Size = New System.Drawing.Size(564, 58)
+        Me.MaterialLabel1.Size = New System.Drawing.Size(189, 72)
         Me.MaterialLabel1.TabIndex = 8
-        Me.MaterialLabel1.Text = "Data Management System"
+        Me.MaterialLabel1.Text = "SAAOB"
         Me.MaterialLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.MaterialLabel1.UseAccent = True
         '
@@ -85,6 +87,7 @@ Partial Class splash
         Me.Controls.Add(Me.lblSet)
         Me.Controls.Add(Me.SplashLoader)
         Me.FormStyle = MaterialSkin.Controls.MaterialForm.FormStyles.StatusAndActionBar_None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "splash"
         Me.Padding = New System.Windows.Forms.Padding(0)

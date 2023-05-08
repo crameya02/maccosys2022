@@ -37,22 +37,17 @@ Public Class ClsOBRE
             cmd.Parameters.AddWithValue("@TotalAmount", TotalAmount)
             cmd.ExecuteNonQuery()
 
-            cmd = New SqlCommand("INSERT INTO OBRE_OtherDetails VALUES(@ID,@OBREmacco_ID, @OBREmbo_ID, @OBRE_NO,@EntryDate, @Payee, @OfficeName,@ResCenter,@Particulars,@AccountCode,@Amount)", sqlCon)
+            cmd = New SqlCommand("INSERT INTO OBRE_OtherDetails (ID,ResCenter,Particulars,AccountCode,Amount,EntryDate) VALUES(@ID,@ResCenter,@Particulars,@AccountCode,@Amount,@EntryDate)", sqlCon)
             cmd.Prepare()
 
             For Each row As DataGridViewRow In DataGridView.Rows
                 If Not row.IsNewRow Then
                     cmd.Parameters.AddWithValue("@ID", ID)
-                    cmd.Parameters.AddWithValue("@OBREmacco_ID", OBREmacco_ID)
-                    cmd.Parameters.AddWithValue("@OBREmbo_ID", OBREmbo_ID)
-                    cmd.Parameters.AddWithValue("@OBRE_NO", OBRE_NO)
-                    cmd.Parameters.AddWithValue("@EntryDate", EntryDate)
-                    cmd.Parameters.AddWithValue("@Payee", Payee)
-                    cmd.Parameters.AddWithValue("@OfficeName", OfficeName)
                     cmd.Parameters.AddWithValue("@ResCenter", row.Cells(0).Value.ToString())
                     cmd.Parameters.AddWithValue("@Particulars", row.Cells(1).Value.ToString())
                     cmd.Parameters.AddWithValue("@AccountCode", row.Cells(2).Value.ToString())
                     cmd.Parameters.AddWithValue("@Amount", row.Cells(3).Value.ToString.Replace(",", ""))
+                    cmd.Parameters.AddWithValue("@EntryDate", EntryDate)
                     cmd.ExecuteNonQuery()
                     cmd.Parameters.Clear()
                 End If
@@ -85,27 +80,33 @@ Public Class ClsOBRE
 
 
 
-            cmd = New SqlCommand("UPDATE OBRE_OtherDetails SET OBREmacco_ID= @OBREmacco_ID, OBREmbo_ID=@OBREmbo_ID, OBRE_NO=@OBRE_NO, Payee=@Payee, OfficeName=@OfficeName,ResCenter=@ResCenter, Particulars=@Particulars,AccountCode=@AccountCode,Amount=@Amount,EntryDate=@EntryDate WHERE  UID=@UID", sqlCon)
+            cmd = New SqlCommand("
+            MERGE INTO OBRE_OtherDetails AS target
+            USING (VALUES (@UID, @Rescenter, @Particulars, @AccountCode,@Amount,@ID,@EntryDate)) AS source (UID, Rescenter, Particulars, AccountCode,Amount,ID,EntryDate)
+                ON COALESCE(target.UID, '') = COALESCE(source.UID, '')
+            WHEN MATCHED THEN
+                UPDATE SET target.Rescenter = source.Rescenter, target.Particulars = source.Particulars, target.AccountCode = source.AccountCode , target.Amount = source.Amount, target.EntryDate=source.EntryDate
+            WHEN NOT MATCHED THEN
+                INSERT ( Rescenter, Particulars, AccountCode,Amount,ID,EntryDate) VALUES ( source.Rescenter, source.Particulars, source.AccountCode,source.Amount,source.ID,source.EntryDate);
+        ", sqlCon)
             cmd.Prepare()
-
-
 
             For Each row As DataGridViewRow In DataGridView.Rows
                 If Not row.IsNewRow Then
-                    'cmd.Parameters.AddWithValue("@ID", ID)
-                    'MsgBox(ID)
-                    cmd.Parameters.AddWithValue("@UID", row.Cells(4).Value)
-                    ' MsgBox(row.Cells(4).Value.ToString)
-                    cmd.Parameters.AddWithValue("@OBREmacco_ID", OBREmacco_ID)
-                    cmd.Parameters.AddWithValue("@OBREmbo_ID", OBREmbo_ID)
-                    cmd.Parameters.AddWithValue("@OBRE_NO", OBRE_NO)
-                    cmd.Parameters.AddWithValue("@EntryDate", EntryDate)
-                    cmd.Parameters.AddWithValue("@Payee", Payee)
-                    cmd.Parameters.AddWithValue("@OfficeName", OfficeName)
                     cmd.Parameters.AddWithValue("@ResCenter", row.Cells(0).Value.ToString())
                     cmd.Parameters.AddWithValue("@Particulars", row.Cells(1).Value.ToString())
                     cmd.Parameters.AddWithValue("@AccountCode", row.Cells(2).Value.ToString())
                     cmd.Parameters.AddWithValue("@Amount", row.Cells(3).Value.ToString.Replace(",", ""))
+                    'If row.Cells(4).Value Is Nothing Then
+                    '    cmd.Parameters.AddWithValue("@UID", DBNull.Value)
+                    '    MsgBox("true")
+                    'Else
+                    '    MsgBox("false")
+                    '    cmd.Parameters.AddWithValue("@UID", row.Cells(4).Value)
+                    'End If
+                    cmd.Parameters.AddWithValue("@EntryDate", EntryDate)
+                    cmd.Parameters.AddWithValue("@UID", If((row.Cells(4).Value) Is Nothing, DBNull.Value, row.Cells(4).Value))
+                    cmd.Parameters.AddWithValue("@ID", ID)
                     cmd.ExecuteNonQuery()
                     cmd.Parameters.Clear()
                 End If
@@ -176,7 +177,8 @@ Public Class ClsOBRE
                     cmd.Parameters.AddWithValue("@EntryDate", EntryDate)
                     cmd.Parameters.AddWithValue("@UID", If((row.Cells(4).Value) Is Nothing, DBNull.Value, row.Cells(4).Value))
                     cmd.Parameters.AddWithValue("@ID", ID)
-                        cmd.ExecuteNonQuery()
+                    MsgBox(ID)
+                    cmd.ExecuteNonQuery()
                         cmd.Parameters.Clear()
                     End If
             Next
@@ -194,4 +196,5 @@ Public Class ClsOBRE
             ClsConn.CloseConnection()
         End If
     End Sub
+
 End Class

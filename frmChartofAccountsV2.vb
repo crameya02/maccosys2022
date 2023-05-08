@@ -4,7 +4,7 @@ Imports System.Data.SqlClient
 Public Class frmChartofAccountsV2
     Private Sub frmChartofAccountsV2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         theme.myCustomSkinDark(Me)
-        Me.Size = DashBoard.FlowLayoutPanel6.Size
+
     End Sub
 
 
@@ -17,20 +17,8 @@ Public Class frmChartofAccountsV2
                     Exit Sub
                 End If
 
-                'con = New SqlConnection(cs)
-                'con.Open()
-                'Dim cb As String = "insert into RCIIndex(Id, IndexType, DateCreated, FundType) Values (@d1,@d2,@d3,@d4)"
-                'cmd = New SqlCommand(cb)
-                'cmd.Parameters.AddWithValue("@d1", Val(txtid.Text))
-                'cmd.Parameters.AddWithValue("@d2", txtindexype.Text)
-                'cmd.Parameters.AddWithValue("@d3", dtpDate.Text)
-                'cmd.Parameters.AddWithValue("@d4", cmfund.Text)
 
-
-                'cmd.Connection = con
-                'cmd.ExecuteReader()
-                'con.Close()
-                sqlCon = New SqlConnection(cs)
+            sqlCon = New SqlConnection(cs)
                 sqlCon.Open()
                 Dim cb1 As String = "insert into ChartOfAccounts(AID,Account_Code,Account_Title" _
                                         & ") VALUES (@d2,@d3,@d4)"

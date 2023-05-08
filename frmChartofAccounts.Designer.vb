@@ -166,6 +166,7 @@ Partial Class frmChartofAccounts
         Me.btnNew.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnNew.UseAccentColor = False
         Me.btnNew.UseVisualStyleBackColor = True
+        Me.btnNew.Visible = False
         '
         'btnSave
         '
@@ -185,6 +186,7 @@ Partial Class frmChartofAccounts
         Me.btnSave.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnSave.UseAccentColor = False
         Me.btnSave.UseVisualStyleBackColor = False
+        Me.btnSave.Visible = False
         '
         'btnUpdate
         '
@@ -204,6 +206,7 @@ Partial Class frmChartofAccounts
         Me.btnUpdate.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnUpdate.UseAccentColor = False
         Me.btnUpdate.UseVisualStyleBackColor = True
+        Me.btnUpdate.Visible = False
         '
         'btnDelete
         '
@@ -223,6 +226,7 @@ Partial Class frmChartofAccounts
         Me.btnDelete.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnDelete.UseAccentColor = False
         Me.btnDelete.UseVisualStyleBackColor = True
+        Me.btnDelete.Visible = False
         '
         'btnPrint
         '
@@ -242,6 +246,7 @@ Partial Class frmChartofAccounts
         Me.btnPrint.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnPrint.UseAccentColor = False
         Me.btnPrint.UseVisualStyleBackColor = True
+        Me.btnPrint.Visible = False
         '
         'btnExport
         '
@@ -261,6 +266,7 @@ Partial Class frmChartofAccounts
         Me.btnExport.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnExport.UseAccentColor = False
         Me.btnExport.UseVisualStyleBackColor = True
+        Me.btnExport.Visible = False
         '
         'btnGetData
         '
@@ -280,6 +286,7 @@ Partial Class frmChartofAccounts
         Me.btnGetData.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnGetData.UseAccentColor = False
         Me.btnGetData.UseVisualStyleBackColor = True
+        Me.btnGetData.Visible = False
         '
         'btnImport
         '
@@ -299,6 +306,7 @@ Partial Class frmChartofAccounts
         Me.btnImport.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnImport.UseAccentColor = False
         Me.btnImport.UseVisualStyleBackColor = True
+        Me.btnImport.Visible = False
         '
         'txtSearchCOA
         '
@@ -344,6 +352,7 @@ Partial Class frmChartofAccounts
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.FormStyle = MaterialSkin.Controls.MaterialForm.FormStyles.StatusAndActionBar_None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmChartofAccounts"
         Me.Padding = New System.Windows.Forms.Padding(0)
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent

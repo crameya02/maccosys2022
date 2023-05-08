@@ -9,6 +9,7 @@ Imports System.Windows.Input
 Imports Microsoft.VisualBasic.Devices
 Imports CrystalDecisions.ReportAppServer.DataDefModel
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
+Imports Bunifu.UI.WinForms.Helpers.Transitions.Transition
 
 Public Class frmChartofAccounts
 
@@ -139,15 +140,22 @@ Public Class frmChartofAccounts
 
             '    .DataSource = ClsConn.LoadData(str)
             'End With
-            With COADGV
-                Dim str As String = String.Format("SELECT  Account_Code as Account_Code, Account_Title as Account_Title FROM ChartOfAccounts WHERE Account_Code like @search order by AID desc")
+            If request = "frmARO" Then
+                With COADGV
+                    Dim str As String = String.Format("SELECT  Account_Code as Account_Code, Account_Title as Account_Title FROM ChartOfAccounts WHERE Account_Code like @search order by AID desc")
 
-                .DataSource = ClsConn.LoadDataWithSearch(str, COAsearchString, txtSearchCOA.Text)
-            End With
+                    .DataSource = ClsConn.LoadDataWithSearch(str, COAsearchString, txtSearchCOA.Text)
+                End With
+                Exit Sub
+            End If
+            If request = "frmOBRE" Then
+                With COADGV
+                    Dim str As String = String.Format("SELECT  Account_Code as Account_Code, Account_Title as Account_Title FROM ChartOfAccounts  order by AID desc")
 
-            'End If
-
-            ' lblTotalStudents.Text = ClsConn.CountRec("SELECT COUNT(idparticipant) as students FROM participants")
+                    .DataSource = ClsConn.LoadData(str).DefaultView
+                End With
+                Exit Sub
+            End If
 
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -188,27 +196,62 @@ Public Class frmChartofAccounts
         'Dim strStart As String = "5-01"
         'Dim inputString As String = txtSearchCOA.Text
         'Dim strSearch As String = COAsearchString & inputString
-        With COADGV
-            Dim str As String = String.Format("SELECT  Account_Code as Account_Code, Account_Title as Account_Title FROM ChartOfAccounts WHERE Account_Code like @search order by AID desc")
 
-            .DataSource = ClsConn.LoadDataWithSearch(str, COAsearchString, txtSearchCOA.Text)
-        End With
+        If request = "frmARO" Then
+            With COADGV
+                Dim str As String = String.Format("SELECT  Account_Code as Account_Code, Account_Title as Account_Title FROM ChartOfAccounts WHERE Account_Code like @search order by AID desc")
+
+                .DataSource = ClsConn.LoadDataWithSearch(str, COAsearchString, txtSearchCOA.Text)
+            End With
+            Exit Sub
+        End If
+        If request = "frmOBRE" Then
+            With COADGV
+                Dim str As String = String.Format("SELECT  Account_Code as Account_Code, Account_Title as Account_Title FROM ChartOfAccounts WHERE Account_Code like '{0}%'  order by AID desc", txtSearchCOA.Text)
+
+                .DataSource = ClsConn.LoadData(str).DefaultView
+            End With
+            Exit Sub
+        End If
+
     End Sub
-
-    Private Sub COADGV_MouseClick(sender As Object, e As MouseEventArgs) Handles COADGV.MouseClick
+    Public Function GetAccountCode2DGV(ByVal dgvTarget As DataGridView, ByVal dgvSource As DataGridView, ByVal intTargetAcc As Integer, ByVal intTargetDesc As Integer?) As Boolean
         Try
-            If COADGV.Rows.Count > 0 Then
-                frmARO.ARODGV.SelectedCells(0).Value = Me.COADGV.SelectedCells(0).Value.ToString
-                frmARO.ARODGV.SelectedCells(1).Value = Me.COADGV.SelectedCells(1).Value.ToString
+            If dgvSource.Rows.Count > 0 Then
+                dgvTarget.SelectedCells(intTargetAcc).Value = dgvSource.SelectedCells(0).Value.ToString
+
+                If intTargetDesc.HasValue Then
+                    dgvTarget.SelectedCells(intTargetDesc).Value = dgvSource.SelectedCells(1).Value.ToString
+                End If
+
                 Me.Close()
+                Return True
             End If
+            Return False
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
         End Try
+    End Function
+
+    Public Property request As String = ""
+    Private Sub COADGV_MouseClick(ByVal sender As Object, ByVal e As MouseEventArgs) Handles COADGV.MouseClick
+        If request = "frmOBRE" Then
+            GetAccountCode2DGV(frmOBRE.OBREDGV, COADGV, 2, Nothing)
+            Exit Sub
+        End If
+        If request = "frmARO" Then
+            GetAccountCode2DGV(frmARO.ARODGV, COADGV, 0, 1)
+            Exit Sub
+        End If
 
     End Sub
 
     Private Sub txtSearchCOA_Click(sender As Object, e As EventArgs) Handles txtSearchCOA.Click
+
+    End Sub
+
+    Private Sub COADGV_DataMemberChanged(sender As Object, e As EventArgs) Handles COADGV.DataMemberChanged
 
     End Sub
 End Class

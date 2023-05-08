@@ -209,20 +209,20 @@ Public Class frmARO
         cmbOffice.DisplayMember = "RCNumber"
     End Sub
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-        ' Try
+        Try
 
-        'If String.IsNullOrEmpty(txtPurpose.Text) Then
-        '    MessageBox.Show("Please fill up required fields.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        '    Exit Sub
-        'End If
-        If btnSave.Text = "Save" Then
-            mode = 1
+            'If String.IsNullOrEmpty(txtPurpose.Text) Then
+            '    MessageBox.Show("Please fill up required fields.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            '    Exit Sub
+            'End If
+            If btnSave.Text = "Save" Then
+                mode = 1
 
-        Else
+            Else
 
-            mode = 2
-        End If
-        If ARODGV.Rows.Count = 1 Then
+                mode = 2
+            End If
+            If ARODGV.Rows.Count = 1 Then
                 ARODGV.AllowUserToAddRows = False
                 If ARODGV.Rows.Count = 0 Then
                     MessageBox.Show("Sorry no data added to grid", "", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -265,9 +265,9 @@ Public Class frmARO
 
                     Case Modes.edit
 
-                    .ID = id
-                    .AROID = aroid
-                    .Office = cmbOffice.Text
+                        .ID = id
+                        .AROID = aroid
+                        .Office = cmbOffice.Text
                         .FundCode = txtFundCode.Text
                         .updateAppro(ARODGV)
                         customSnackbar(Me, "Record Successfully Updated", "Ok")
@@ -280,11 +280,11 @@ Public Class frmARO
                 End Select
                 'Initial_State()
             End With
-        'DashBoard.ShowRegistration()
-        'ClearTextbox(Me)
-        'Catch ex As Exception
-        '    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        'End Try
+            'DashBoard.ShowRegistration()
+            'ClearTextbox(Me)
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
     Public id, aroid, entrydate, fy, office, purpose, fundcode As String
 
@@ -295,6 +295,7 @@ Public Class frmARO
     Private Sub btnGetData_Click(sender As Object, e As EventArgs) Handles btnGetData.Click
         'frmARO_OtherDetails.Size = New System.Drawing.Size(1117, 525)
         mode = 2
+
         action = 1
         frmARO_OtherDetails.FormStyle = FormStyles.ActionBar_40
         frmARO_OtherDetails.TopLevel = True
@@ -303,12 +304,11 @@ Public Class frmARO
         frmARO_OtherDetails.ARODGV.AllowUserToResizeRows = False
         frmARO_OtherDetails.ARODGV.AllowUserToDeleteRows = False
         frmARO_OtherDetails.ARODGV.AllowUserToResizeColumns = False
+
         frmARO_OtherDetails.ShowDialog()
-    End Sub
-
-    Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
 
     End Sub
+
 
     Private Sub cmbOffice_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbOffice.SelectedIndexChanged
         cmbOffice.ValueMember = "Office"
@@ -326,6 +326,7 @@ Public Class frmARO
             frmChartofAccounts.COADGV.AllowUserToDeleteRows = False
             frmChartofAccounts.COADGV.AllowUserToResizeColumns = False
             frmChartofAccounts.COAsearchString = txtFundCode.Text.Remove(0, 1)
+            frmChartofAccounts.request = "frmARO"
             frmChartofAccounts.ShowDialog()
 
         End If
@@ -333,41 +334,75 @@ Public Class frmARO
         If e.KeyCode = Keys.Delete Then
             If mode = 2 Then
 
-                Dim message As String = "Are you sure you want to delete this item?" & vbCrLf & vbCrLf & "" & vbCrLf & vbCrLf & "This action cannot be undone."
-            Dim title As String = "Confirmation"
-            Dim buttons As MessageBoxButtons = MessageBoxButtons.OKCancel
+                Dim message As String = "Are you sure you want to delete this item?. If there is connected Allotment and Adjustments, they will be deleted as well." & vbCrLf & vbCrLf & "" & vbCrLf & vbCrLf & "This action cannot be undone."
+                Dim title As String = "Confirmation"
+                Dim buttons As MessageBoxButtons = MessageBoxButtons.OKCancel
 
-            Dim result As DialogResult = MessageBox.Show(message, title, buttons, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+                Dim result As DialogResult = MessageBox.Show(message, title, buttons, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
 
-            If result = DialogResult.OK Then
-                ' User clicked OK, perform the action
-                Dim ARODeleteAppro As New ClsARO
-                With ARODeleteAppro
-                    .deleteAppropriationID(ARODGV.CurrentRow.Cells(3).Value.ToString())
-                    Dim SnackBarMessage1 As MaterialSkin.Controls.MaterialSnackBar
-                    SnackBarMessage1 = New MaterialSkin.Controls.MaterialSnackBar("Record Successfully deleted", "Ok", True)
-                    SnackBarMessage1.Show(Me)
-                End With
-            Else
-                e.Handled = True ' Cancel the Delete key down event
-            End If
+                If result = DialogResult.OK Then
+                    ' User clicked OK, perform the action
+                    If ARODGV.CurrentRow.Cells(3).Value Is Nothing Then
+                        'automatically remove the row
+                        Exit Sub
+                    Else
+                        Dim ARODeleteAppro As New ClsARO
+                        With ARODeleteAppro
+                            '.deleteAppropriationID(ARODGV.CurrentRow.Cells(3).Value.ToString())
+                            .deleteAppropriationAndAllConnectedData(ARODGV.CurrentRow.Cells(3).Value.ToString())
+                            Dim SnackBarMessage1 As MaterialSkin.Controls.MaterialSnackBar
+                            SnackBarMessage1 = New MaterialSkin.Controls.MaterialSnackBar("Record Successfully deleted", "Ok", True)
+                            SnackBarMessage1.Show(Me)
+                        End With
+                    End If
+
+                Else
+                    e.Handled = True ' Cancel the Delete key down event
+
+                End If
 
             End If
         End If
+        If e.KeyCode = Keys.F AndAlso e.Control Then ' check if ctrl+f is pressed
+            e.SuppressKeyPress = True ' suppress the default behavior of ctrl+f
+            Dim input As String = InputBox("Enter search text") ' show input box
+            If Not String.IsNullOrEmpty(input) Then ' check if input is not empty
+                Dim cell As DataGridViewCell = ARODGV.Rows.Cast(Of DataGridViewRow).SelectMany(Function(row) row.Cells.Cast(Of DataGridViewCell)).FirstOrDefault(Function(c) c.Value IsNot Nothing AndAlso c.Value.ToString().Contains(input)) ' find the cell containing the input
+                If cell IsNot Nothing Then ' check if cell is found
+                    ARODGV.CurrentCell = cell ' set the current cell to the found cell
+                    ARODGV.Focus() ' focus the datagridview
+                Else
+                    MessageBox.Show($"Text '{input}' not found") ' show message box if text is not found
+                End If
+            End If
+        End If
+    End Sub
+    Private Sub ToggleColumnVisibility(dgv As DataGridView, colIndex As Integer)
+        Dim col As DataGridViewColumn = dgv.Columns(colIndex)
+        col.Visible = Not col.Visible
     End Sub
 
+    Private Sub btnView_Click(sender As Object, e As EventArgs) Handles btnView.Click
+        Try
+            ToggleColumnVisibility(ARODGV, 3)
+        Catch ex As Exception
+            ' If an error occurs, check the connection state and close it if necessary.
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.[Error])
+
+        End Try
+    End Sub
 
     Private Sub ARODGV_UserDeletingRow(sender As Object, e As DataGridViewRowCancelEventArgs) Handles ARODGV.UserDeletingRow
         Try
-            If mode = 2 Then
-                Dim deletedValue As Decimal
-                If Decimal.TryParse(e.Row.Cells("Allotment").Value.ToString(), deletedValue) Then
+
+            Dim deletedValue As Decimal
+                If Decimal.TryParse(e.Row.Cells("Appropriation").Value.ToString(), deletedValue) Then
                     ' Recalculate the total amount
                     Dim runningTotal As Decimal = 0
                     For i As Integer = 0 To ARODGV.Rows.Count - 1
                         If Not ARODGV.Rows(i).IsNewRow Then
                             Dim cellValue As Decimal
-                            If Decimal.TryParse(ARODGV.Rows(i).Cells("Allotment").Value.ToString(), cellValue) Then
+                            If Decimal.TryParse(ARODGV.Rows(i).Cells("Appropriation").Value.ToString(), cellValue) Then
                                 runningTotal += cellValue
                                 If ARODGV.RowCount = 0 Then
                                     runningTotal = 0.00
@@ -382,9 +417,9 @@ Public Class frmARO
                     Next
                     ' Update the value in the last row
 
-                    ARODGV.Rows(ARODGV.Rows.Count - 1).Cells("Allotment").Value = String.Format("{0:N2}", runningTotal)
+                    ARODGV.Rows(ARODGV.Rows.Count - 1).Cells("Appropriation").Value = String.Format("{0:N2}", runningTotal)
                 End If
-            End If
+
         Catch ex As Exception
 
         End Try
@@ -426,6 +461,23 @@ Public Class frmARO
         btnSave.Enabled = False
         btnSave.Enabled = True
         btnSave.Text = "Save"
+    End Sub
+    Private Sub dataGridView1_MouseDown(ByVal sender As Object, ByVal e As MouseEventArgs) Handles ARODGV.MouseDown
+        If e.Button = MouseButtons.Right Then ' Check if right mouse button is clicked
+            Dim hti As DataGridView.HitTestInfo = ARODGV.HitTest(e.X, e.Y) ' Get the info of clicked cell
+            If hti.RowIndex >= 0 Then ' Check if a row is clicked
+                ARODGV.ClearSelection() ' Clear any previously selected rows
+                ARODGV.Rows(hti.RowIndex).Selected = True ' Select the clicked row
+                ContextMenuStrip1.Show(ARODGV, e.Location) ' Show the context menu at the clicked location
+            End If
+        End If
+    End Sub
+
+
+
+    Private Sub InsertRowAboveToolStripMenuItem_Click_1(sender As Object, e As EventArgs) Handles InsertRowAboveToolStripMenuItem.Click
+        Dim selectedRowIndex As Integer = ARODGV.SelectedRows(0).Index ' Get the index of the selected row
+        ARODGV.Rows.Insert(selectedRowIndex, 1) ' Insert a new row above the selected row
     End Sub
 
 

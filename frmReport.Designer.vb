@@ -21,12 +21,14 @@ Partial Class frmReport
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmReport))
         Me.CrystalReportViewer1 = New CrystalDecisions.Windows.Forms.CrystalReportViewer()
         Me.SuspendLayout()
         '
         'CrystalReportViewer1
         '
         Me.CrystalReportViewer1.ActiveViewIndex = -1
+        Me.CrystalReportViewer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.CrystalReportViewer1.Cursor = System.Windows.Forms.Cursors.Default
         Me.CrystalReportViewer1.DisplayBackgroundEdge = False
         Me.CrystalReportViewer1.Dock = System.Windows.Forms.DockStyle.Fill
@@ -52,6 +54,7 @@ Partial Class frmReport
         Me.Controls.Add(Me.CrystalReportViewer1)
         Me.ForeColor = System.Drawing.SystemColors.Control
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmReport"
         Me.ShowIcon = False
         Me.ShowInTaskbar = False

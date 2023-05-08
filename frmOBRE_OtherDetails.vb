@@ -6,6 +6,9 @@ Public Class frmOBRE_OtherDetails
     Public Sub ShowOBRE()
         OBREDGV.DataSource = ClsConn.LoadData("SELECT OBRE.UID as UID, OBRE.OBREmacco_ID as [OBREmaccoID], OBRE.EntryDate as [Date], OBRE.Payee as Payee,OBRE.TotalAmount as TotalAmount, ID as ID" _
                                              & " from OBRE order by UID desc").DefaultView
+        OBREDGV.Columns(0).Visible = False
+        OBREDGV.Columns(4).Visible = False
+        OBREDGV.Columns(5).Visible = False
     End Sub
     Private Sub frmOBRE_OtherDetails_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         theme.myCustomSkinDark(Me)
@@ -16,6 +19,7 @@ Public Class frmOBRE_OtherDetails
         Dim str As String = String.Format("SELECT OBRE.UID as UID, OBRE.OBREmacco_ID as [OBREmaccoID], OBRE.EntryDate as [Date], OBRE.Payee as Payee,OBRE.TotalAmount as TotalAmount, ID as ID" _
                                              & " from OBRE  WHERE OBREmacco_ID like '%{0}%' OR Payee like '%{0}%' order by UID desc", searchString)
         OBREDGV.DataSource = ClsConn.LoadData(str).DefaultView
+
 
     End Sub
 
@@ -82,6 +86,12 @@ Select RTRIM(OBRE.ID), RTRIM(OBRE_OtherDetails.ID),RTRIM(OBRE.OBREmacco_ID),RTRI
                     'frmOBRE.OBREDGV.Columns(1).ReadOnly = True
                     'frmOBRE.OBREDGV.Columns(2).ReadOnly = True
                     'frmOBRE.OBREDGV(3, frmOBRE.OBREDGV.Rows.Count - 1).ReadOnly = True
+                    mode = 2
+
+                    frmOBRE.btnSave.Text = "UPDATE"
+                    frmOBRE.btnSave.Enabled = False
+                    frmOBRE.btnSave.Enabled = True
+                    frmOBRE.btnSave.Update()
 
                     Me.Close()
                     ClsConn.CloseConnection()

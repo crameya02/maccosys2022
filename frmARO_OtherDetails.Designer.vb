@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmARO_OtherDetails
     Inherits MaterialSkin.Controls.MaterialForm
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class frmARO_OtherDetails
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -29,6 +29,7 @@ Partial Class frmARO_OtherDetails
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmARO_OtherDetails))
         Me.ARODGV = New Bunifu.UI.WinForms.BunifuDataGridView()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.BunifuCircleProgress1 = New Bunifu.UI.WinForms.BunifuCircleProgress()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.txtSearchARO = New MaterialSkin.Controls.MaterialTextBox2()
@@ -43,6 +44,7 @@ Partial Class frmARO_OtherDetails
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
+        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         CType(Me.ARODGV, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -115,12 +117,51 @@ Partial Class frmARO_OtherDetails
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.BunifuCircleProgress1)
         Me.Panel2.Controls.Add(Me.ARODGV)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(3, 62)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(794, 385)
         Me.Panel2.TabIndex = 5
+        '
+        'BunifuCircleProgress1
+        '
+        Me.BunifuCircleProgress1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom), System.Windows.Forms.AnchorStyles)
+        Me.BunifuCircleProgress1.Animated = True
+        Me.BunifuCircleProgress1.AnimationInterval = 1
+        Me.BunifuCircleProgress1.AnimationSpeed = 1
+        Me.BunifuCircleProgress1.BackColor = System.Drawing.Color.Transparent
+        Me.BunifuCircleProgress1.CircleMargin = 10
+        Me.BunifuCircleProgress1.Font = New System.Drawing.Font("Microsoft Sans Serif", 40.0!, System.Drawing.FontStyle.Bold)
+        Me.BunifuCircleProgress1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
+        Me.BunifuCircleProgress1.IsPercentage = True
+        Me.BunifuCircleProgress1.LineProgressThickness = 10
+        Me.BunifuCircleProgress1.LineThickness = 10
+        Me.BunifuCircleProgress1.Location = New System.Drawing.Point(314, 103)
+        Me.BunifuCircleProgress1.Name = "BunifuCircleProgress1"
+        Me.BunifuCircleProgress1.ProgressAnimationSpeed = 200
+        Me.BunifuCircleProgress1.ProgressBackColor = System.Drawing.Color.Gainsboro
+        Me.BunifuCircleProgress1.ProgressColor = System.Drawing.Color.DodgerBlue
+        Me.BunifuCircleProgress1.ProgressColor2 = System.Drawing.Color.DodgerBlue
+        Me.BunifuCircleProgress1.ProgressEndCap = Bunifu.UI.WinForms.BunifuCircleProgress.CapStyles.Round
+        Me.BunifuCircleProgress1.ProgressFillStyle = Bunifu.UI.WinForms.BunifuCircleProgress.FillStyles.Solid
+        Me.BunifuCircleProgress1.ProgressStartCap = Bunifu.UI.WinForms.BunifuCircleProgress.CapStyles.Round
+        Me.BunifuCircleProgress1.SecondaryFont = New System.Drawing.Font("Microsoft Sans Serif", 16.0!)
+        Me.BunifuCircleProgress1.Size = New System.Drawing.Size(162, 162)
+        Me.BunifuCircleProgress1.SubScriptColor = System.Drawing.Color.FromArgb(CType(CType(166, Byte), Integer), CType(CType(166, Byte), Integer), CType(CType(166, Byte), Integer))
+        Me.BunifuCircleProgress1.SubScriptMargin = New System.Windows.Forms.Padding(5, -20, 0, 0)
+        Me.BunifuCircleProgress1.SubScriptText = ".00"
+        Me.BunifuCircleProgress1.SuperScriptColor = System.Drawing.Color.FromArgb(CType(CType(166, Byte), Integer), CType(CType(166, Byte), Integer), CType(CType(166, Byte), Integer))
+        Me.BunifuCircleProgress1.SuperScriptMargin = New System.Windows.Forms.Padding(5, 50, 0, 0)
+        Me.BunifuCircleProgress1.SuperScriptText = "%"
+        Me.BunifuCircleProgress1.TabIndex = 17
+        Me.BunifuCircleProgress1.Text = "30"
+        Me.BunifuCircleProgress1.TextMargin = New System.Windows.Forms.Padding(0, 5, 0, 0)
+        Me.BunifuCircleProgress1.Value = 30
+        Me.BunifuCircleProgress1.ValueByTransition = 30
+        Me.BunifuCircleProgress1.ValueMargin = New System.Windows.Forms.Padding(0, 5, 0, 0)
+        Me.BunifuCircleProgress1.Visible = False
         '
         'Panel1
         '
@@ -344,6 +385,9 @@ Partial Class frmARO_OtherDetails
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
         '
+        'BackgroundWorker1
+        '
+        '
         'frmARO_OtherDetails
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -352,6 +396,7 @@ Partial Class frmARO_OtherDetails
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.FormStyle = MaterialSkin.Controls.MaterialForm.FormStyles.StatusAndActionBar_None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmARO_OtherDetails"
@@ -386,4 +431,6 @@ Partial Class frmARO_OtherDetails
     Friend WithEvents btnGetData As MaterialSkin.Controls.MaterialButton
     Friend WithEvents btnImport As MaterialSkin.Controls.MaterialButton
     Friend WithEvents Timer2 As Timer
+    Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
+    Friend WithEvents BunifuCircleProgress1 As Bunifu.UI.WinForms.BunifuCircleProgress
 End Class

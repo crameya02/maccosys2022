@@ -17,20 +17,24 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <PublishUrl>C:\xampp\htdocs\SAAOB\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
+    <InstallUrl>http://godvalley/saaob/</InstallUrl>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>15</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -64,6 +68,24 @@
   </PropertyGroup>
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>388E644C2255C21C49AFA6AA0F6A2C52811458F0</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>maccosys2022_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Icon1.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Azure.Core, Version=1.24.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
@@ -488,9 +510,12 @@
     <Compile Include="ClsCalendarControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="ClsChartOfAccounts.vb" />
     <Compile Include="ClsConn.vb" />
+    <Compile Include="ClsIni.vb" />
     <Compile Include="ClsLogin.vb" />
     <Compile Include="ClsOBRE.vb" />
+    <Compile Include="ClsResponsibilityCenter.vb" />
     <Compile Include="CrystalReport2.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -501,6 +526,12 @@
       <DependentUpon>DashBoard.vb</DependentUpon>
     </Compile>
     <Compile Include="DashBoard.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmARO-Adjustments_OtherDetails.Designer.vb">
+      <DependentUpon>frmARO-Adjustments_OtherDetails.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmARO-Adjustments_OtherDetails.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmARO-Allotment.Designer.vb">
@@ -543,6 +574,18 @@
       <DependentUpon>frmChartofAccountsV2.vb</DependentUpon>
     </Compile>
     <Compile Include="frmChartofAccountsV2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmManageChartofAccounts.Designer.vb">
+      <DependentUpon>frmManageChartofAccounts.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmManageChartofAccounts.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmManageResponsibilityCenter.Designer.vb">
+      <DependentUpon>frmManageResponsibilityCenter.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmManageResponsibilityCenter.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmOBRE.Designer.vb">
@@ -682,6 +725,9 @@
     <EmbeddedResource Include="DashBoard.resx">
       <DependentUpon>DashBoard.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmARO-Adjustments_OtherDetails.resx">
+      <DependentUpon>frmARO-Adjustments_OtherDetails.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmARO-Allotment.resx">
       <DependentUpon>frmARO-Allotment.vb</DependentUpon>
     </EmbeddedResource>
@@ -702,6 +748,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmChartofAccountsV2.resx">
       <DependentUpon>frmChartofAccountsV2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmManageChartofAccounts.resx">
+      <DependentUpon>frmManageChartofAccounts.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmManageResponsibilityCenter.resx">
+      <DependentUpon>frmManageResponsibilityCenter.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmOBRE.resx">
       <DependentUpon>frmOBRE.vb</DependentUpon>
@@ -774,6 +826,8 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="maccosys2022_TemporaryKey.pfx" />
+    <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -854,6 +908,27 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-edit-24-dark.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-moleskine-96.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-document-obre 200.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-invite-96 db.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-estimate db-96.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-transaction db-96.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icon1.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="packages\Fody.4.0.2\build\Fody.targets" Condition="Exists('packages\Fody.4.0.2\build\Fody.targets')" />

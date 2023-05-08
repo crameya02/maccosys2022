@@ -1,5 +1,8 @@
 ﻿Imports System.Data.SqlClient
 Imports System.Globalization
+Imports CrystalDecisions.ReportAppServer.DataDefModel
+Imports Microsoft.SqlServer.Management.HadrData
+Imports Microsoft.SqlServer.Management.XEvent
 Imports TheArtOfDev.HtmlRenderer.Adapters
 
 Public Class ClsARO
@@ -171,24 +174,33 @@ WHEN NOT MATCHED THEN
     '        ClsConn.CloseConnection()
     '    End If
     'End Sub
-    Public Sub updateAllotment(DataGridView As DataGridView)
+    Function ExecuteMerge(DataGridView As DataGridView) As Integer
+        Dim insertedRows As Integer
         If (ClsConn.OpenConnection() = True) Then
-            cmd = New SqlCommand("
+            Dim sqlCommand As New SqlCommand("
+            CREATE TABLE #temp (
+                Action VARCHAR(10),
+                ID INT,
+                SomeColumn VARCHAR(MAX)
+            );   
             MERGE INTO ARO_allotment AS target
             USING (VALUES (@UID, @Purpose, @Amount, @EntryDate,@Description,@AccountCode,@ID)) AS source (UID, Purpose, Amount, EntryDate,Description,AccountCode,ID)
                 ON COALESCE(target.UID, '') = COALESCE(source.UID, '')
             WHEN MATCHED THEN
                 UPDATE SET target.Purpose = source.Purpose, target.Amount = source.Amount, target.EntryDate = source.EntryDate
             WHEN NOT MATCHED THEN
-                INSERT ( Purpose, Amount, EntryDate,Description,AccountCode,ID) VALUES ( source.Purpose, source.Amount, source.EntryDate,source.Description,source.AccountCode,source.ID);
-        ", sqlCon)
+                INSERT ( Purpose, Amount, EntryDate,Description,AccountCode,ID) VALUES ( source.Purpose, source.Amount, source.EntryDate,source.Description,source.AccountCode,source.ID)
+  OUTPUT $action, inserted.ID, inserted.SomeColumn INTO #temp;
 
+            SELECT COUNT(*) FROM #temp WHERE Action = 'INSERT';
+        ", sqlCon)
             For Each row As DataGridViewRow In DataGridView.Rows
                 If Not row.IsNewRow Then
+
                     cmd.Parameters.AddWithValue("@UID", If(Convert.IsDBNull(row.Cells(5).Value), DBNull.Value, row.Cells(5).Value))
+
                     cmd.Parameters.AddWithValue("@Purpose", Purpose)
                     cmd.Parameters.AddWithValue("@Amount", row.Cells(3).Value.ToString.Replace(",", ""))
-
 
                     cmd.Parameters.AddWithValue("@ID", row.Cells(4).Value)
 
@@ -201,8 +213,88 @@ WHEN NOT MATCHED THEN
                     cmd.Parameters.Clear()
                 End If
             Next
-            ClsConn.CloseConnection()
+            ' insertedRows = CInt(sqlCommand.ExecuteScalar())
+            Return insertedRows
 
+            ClsConn.CloseConnection()
+        End If
+    End Function
+
+    Public Sub updateAllotment(DataGridView As DataGridView)
+        If (ClsConn.OpenConnection() = True) Then
+            'cmd = New SqlCommand("  
+            '                MERGE INTO ARO_allotment AS target
+            '                USING (VALUES (@UID, @Purpose, @Amount, @EntryDate,@Description,@AccountCode,@ID)) AS source (UID, Purpose, Amount, EntryDate,Description,AccountCode,ID)
+            '                    ON COALESCE(target.UID, '') = COALESCE(source.UID, '')
+            '                WHEN MATCHED THEN
+            '                    UPDATE SET target.Purpose = source.Purpose, target.Amount = source.Amount, target.EntryDate = source.EntryDate
+            '                WHEN NOT MATCHED THEN
+            '                    INSERT ( Purpose, Amount, EntryDate,Description,AccountCode,ID) VALUES ( source.Purpose, source.Amount, source.EntryDate,source.Description,source.AccountCode,source.ID);
+            ';
+            '            ", sqlCon)
+            '            For Each row As DataGridViewRow In DataGridView.Rows
+            '                If Not row.IsNewRow Then
+
+            '                    cmd.Parameters.AddWithValue("@UID", If(Convert.IsDBNull(row.Cells(5).Value), DBNull.Value, row.Cells(5).Value))
+
+            '                    cmd.Parameters.AddWithValue("@Purpose", Purpose)
+            '                    cmd.Parameters.AddWithValue("@Amount", row.Cells(3).Value.ToString.Replace(",", ""))
+
+            '                    cmd.Parameters.AddWithValue("@ID", row.Cells(4).Value)
+
+            '                    'cmd.Parameters.AddWithValue("@EntryDate", frmARO_Allotment.entrydate)
+            '                    'MsgBox(EntryDate)
+            '                    cmd.Parameters.AddWithValue("@EntryDate", EntryDate)
+            '                    cmd.Parameters.AddWithValue("@Description", row.Cells(1).Value)
+            '                    cmd.Parameters.AddWithValue("@AccountCode", row.Cells(0).Value)
+            '                    cmd.ExecuteNonQuery()
+            '                    cmd.Parameters.Clear()
+            '                End If
+            '            Next
+            cmd = New SqlCommand("   
+                       
+                            MERGE INTO ARO_allotment AS target
+                            USING (VALUES (@UID, @Purpose, @Amount, @EntryDate,@Description,@AccountCode,@ID)) AS source (UID, Purpose, Amount, EntryDate,Description,AccountCode,ID)
+                                ON COALESCE(target.UID, '') = COALESCE(source.UID, '')
+                            WHEN MATCHED THEN
+                                UPDATE SET target.Purpose = source.Purpose, target.Amount = source.Amount, target.EntryDate = source.EntryDate
+                            WHEN NOT MATCHED THEN
+                                INSERT ( Purpose, Amount, EntryDate,Description,AccountCode,ID) VALUES ( source.Purpose, source.Amount, source.EntryDate,source.Description,source.AccountCode,source.ID)
+            OUTPUT $action, inserted.ID; ", sqlCon)
+
+            Dim insertedRows As Integer = 0
+            For Each row As DataGridViewRow In DataGridView.Rows
+                If Not row.IsNewRow Then
+                    cmd.Parameters.AddWithValue("@UID", If(Convert.IsDBNull(row.Cells(5).Value), DBNull.Value, row.Cells(5).Value))
+                    cmd.Parameters.AddWithValue("@Purpose", Purpose)
+                    cmd.Parameters.AddWithValue("@Amount", row.Cells(3).Value.ToString.Replace(",", ""))
+                    cmd.Parameters.AddWithValue("@ID", row.Cells(4).Value)
+                    cmd.Parameters.AddWithValue("@EntryDate", EntryDate)
+                    cmd.Parameters.AddWithValue("@Description", row.Cells(1).Value)
+                    cmd.Parameters.AddWithValue("@AccountCode", row.Cells(0).Value)
+
+                    ' Capture the action and ID from the OUTPUT clause
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
+                        If reader.Read() Then
+                            Dim action As String = reader.GetString(0)
+                            Dim id As Integer = reader.GetInt32(1)
+                            If action = "INSERT" Then
+                                insertedRows += 1
+                            End If
+                        End If
+                    End Using
+
+                    cmd.Parameters.Clear()
+                End If
+            Next
+
+            If insertedRows > 0 Then
+                ' MsgBox(insertedRows)
+            End If
+
+
+
+            ClsConn.CloseConnection()
 
         End If
     End Sub
@@ -215,22 +307,24 @@ WHEN NOT MATCHED THEN
             WHEN MATCHED THEN
                 UPDATE SET target.Remarks = source.Remarks, target.Amount = source.Amount, target.DateCreated = source.DateCreated , target.DateModified = source.DateModified
             WHEN NOT MATCHED THEN
-                INSERT ( Remarks, Amount, DateCreated,Description,AccountCode,ID) VALUES ( source.Remarks, source.Amount, source.DateCreated,source.Description,source.AccountCode,source.ID);
+                INSERT ( Remarks, Amount, DateCreated,Description,AccountCode,ID,DateModified) VALUES ( source.Remarks, source.Amount, source.DateCreated,source.Description,source.AccountCode,source.ID,source.DateModified);
         ", sqlCon)
 
             For Each row As DataGridViewRow In DataGridView.Rows
                 If Not row.IsNewRow Then
-                    cmd.Parameters.AddWithValue("@UID", If(Convert.IsDBNull(row.Cells(5).Value), DBNull.Value, row.Cells(5).Value))
-                    cmd.Parameters.AddWithValue("@Remarks", If(Convert.IsDBNull(row.Cells(6).Value), "NA", row.Cells(6).Value))
-                    cmd.Parameters.AddWithValue("@Amount", row.Cells(4).Value.ToString.Replace(",", ""))
+                    ' use convert.isdbnull if the row comes from datasource and not added by user. String.IsNullOrEmpty if it is added by the user
+                    'cmd.Parameters.AddWithValue("@UID", If(Convert.IsDBNull(row.Cells(5).Value), DBNull.Value, row.Cells(5).Value))
+                    cmd.Parameters.AddWithValue("@UID", If(String.IsNullOrEmpty(row.Cells(4).Value), DBNull.Value, row.Cells(4).Value))
+                    cmd.Parameters.AddWithValue("@Remarks", If(String.IsNullOrEmpty(row.Cells(3).Value), "NA", row.Cells(3).Value))
+                    cmd.Parameters.AddWithValue("@Amount", row.Cells(2).Value.ToString.Replace(",", ""))
 
 
-                    cmd.Parameters.AddWithValue("@ID", row.Cells(3).Value)
+                    cmd.Parameters.AddWithValue("@ID", frmARO_Adjustments.defauiltID)
 
                     cmd.Parameters.AddWithValue("@DateCreated", EntryDate)
                     cmd.Parameters.AddWithValue("@DateModified", EntryDate)
-                    cmd.Parameters.AddWithValue("@Description", row.Cells(1).Value)
-                    cmd.Parameters.AddWithValue("@AccountCode", row.Cells(0).Value)
+                    cmd.Parameters.AddWithValue("@Description", frmARO_Adjustments.defaultDescription)
+                    cmd.Parameters.AddWithValue("@AccountCode", row.Cells(1).Value)
                     cmd.ExecuteNonQuery()
                     cmd.Parameters.Clear()
                 End If
@@ -249,22 +343,22 @@ WHEN NOT MATCHED THEN
             WHEN MATCHED THEN
                 UPDATE SET target.Remarks = source.Remarks, target.Amount = source.Amount, target.DateCreated = source.DateCreated , target.DateModified = source.DateModified
             WHEN NOT MATCHED THEN
-                INSERT ( Remarks, Amount, DateCreated,Description,AccountCode,ID) VALUES ( source.Remarks, source.Amount, source.DateCreated,source.Description,source.AccountCode,source.ID);
+                INSERT ( Remarks, Amount, DateCreated,Description,AccountCode,ID,DateModified) VALUES ( source.Remarks, source.Amount, source.DateCreated,source.Description,source.AccountCode,source.ID,source.DateModified);
         ", sqlCon)
 
             For Each row As DataGridViewRow In DataGridView.Rows
                 If Not row.IsNewRow Then
-                    cmd.Parameters.AddWithValue("@UID", If(Convert.IsDBNull(row.Cells(8).Value), DBNull.Value, row.Cells(8).Value))
-                    cmd.Parameters.AddWithValue("@Remarks", If(Convert.IsDBNull(row.Cells(9).Value), "NA", row.Cells(9).Value))
-                    cmd.Parameters.AddWithValue("@Amount", row.Cells(7).Value.ToString.Replace(",", ""))
+                    cmd.Parameters.AddWithValue("@UID", If(String.IsNullOrEmpty(row.Cells(4).Value), DBNull.Value, row.Cells(4).Value))
+                    cmd.Parameters.AddWithValue("@Remarks", If(String.IsNullOrEmpty(row.Cells(3).Value), "NA", row.Cells(3).Value))
+                    cmd.Parameters.AddWithValue("@Amount", row.Cells(2).Value.ToString.Replace(",", ""))
 
 
-                    cmd.Parameters.AddWithValue("@ID", row.Cells(3).Value)
+                    cmd.Parameters.AddWithValue("@ID", frmARO_Adjustments.defauiltID)
 
                     cmd.Parameters.AddWithValue("@DateCreated", EntryDate)
                     cmd.Parameters.AddWithValue("@DateModified", EntryDate)
-                    cmd.Parameters.AddWithValue("@Description", row.Cells(1).Value)
-                    cmd.Parameters.AddWithValue("@AccountCode", row.Cells(0).Value)
+                    cmd.Parameters.AddWithValue("@Description", frmARO_Adjustments.defaultDescription)
+                    cmd.Parameters.AddWithValue("@AccountCode", row.Cells(1).Value)
                     cmd.ExecuteNonQuery()
                     cmd.Parameters.Clear()
                 End If
@@ -283,22 +377,24 @@ WHEN NOT MATCHED THEN
             WHEN MATCHED THEN
                 UPDATE SET target.Remarks = source.Remarks, target.Amount = source.Amount, target.DateCreated = source.DateCreated , target.DateModified = source.DateModified
             WHEN NOT MATCHED THEN
-                INSERT ( Remarks, Amount, DateCreated,Description,AccountCode,ID) VALUES ( source.Remarks, source.Amount, source.DateCreated,source.Description,source.AccountCode,source.ID);
+                INSERT ( Remarks, Amount, DateCreated,Description,AccountCode,ID,DateModified) VALUES ( source.Remarks, source.Amount, source.DateCreated,source.Description,source.AccountCode,source.ID,source.DateModified);
         ", sqlCon)
 
             For Each row As DataGridViewRow In DataGridView.Rows
                 If Not row.IsNewRow Then
-                    cmd.Parameters.AddWithValue("@UID", If(Convert.IsDBNull(row.Cells(11).Value), DBNull.Value, row.Cells(11).Value))
-                    cmd.Parameters.AddWithValue("@Remarks", If(Convert.IsDBNull(row.Cells(12).Value), "NA", row.Cells(12).Value))
-                    cmd.Parameters.AddWithValue("@Amount", row.Cells(10).Value.ToString.Replace(",", ""))
+                    cmd.Parameters.AddWithValue("@UID", If(String.IsNullOrEmpty(row.Cells(4).Value), DBNull.Value, row.Cells(4).Value))
+                    cmd.Parameters.AddWithValue("@Remarks", If(String.IsNullOrEmpty(row.Cells(3).Value), "NA", row.Cells(3).Value))
+                    cmd.Parameters.AddWithValue("@Amount", row.Cells(2).Value.ToString.Replace(",", ""))
 
 
-                    cmd.Parameters.AddWithValue("@ID", row.Cells(3).Value)
+
+
+                    cmd.Parameters.AddWithValue("@ID", frmARO_Adjustments.defauiltID)
 
                     cmd.Parameters.AddWithValue("@DateCreated", EntryDate)
                     cmd.Parameters.AddWithValue("@DateModified", EntryDate)
-                    cmd.Parameters.AddWithValue("@Description", row.Cells(1).Value)
-                    cmd.Parameters.AddWithValue("@AccountCode", row.Cells(0).Value)
+                    cmd.Parameters.AddWithValue("@Description", frmARO_Adjustments.defaultDescription)
+                    cmd.Parameters.AddWithValue("@AccountCode", row.Cells(1).Value)
                     cmd.ExecuteNonQuery()
                     cmd.Parameters.Clear()
                 End If
@@ -315,5 +411,49 @@ WHEN NOT MATCHED THEN
             cmd.ExecuteNonQuery()
             ClsConn.CloseConnection()
         End If
+    End Sub
+
+    Public Sub deleteAllotmentID(ByVal id As String)
+        If (ClsConn.OpenConnection() = True) Then
+            cmd = New SqlCommand("delete from aro_allotment where id=@id", sqlCon)
+            cmd.Parameters.AddWithValue("@id", id)
+            cmd.ExecuteNonQuery()
+            ClsConn.CloseConnection()
+        End If
+    End Sub
+
+
+    Public Sub deleteAdjustmentID(ByVal id As String, sqlstring As String)
+        If (ClsConn.OpenConnection() = True) Then
+            cmd = New SqlCommand(sqlstring, sqlCon)
+            cmd.Parameters.AddWithValue("@UID", id)
+            cmd.ExecuteNonQuery()
+            ClsConn.CloseConnection()
+        End If
+    End Sub
+    Public Sub deleteAppropriationAndAllConnectedData(ByVal id As String)
+        'as string
+        'Dim value As String = ""
+        If (ClsConn.OpenConnection() = True) Then
+            'checker
+            'cmd = New SqlCommand("SELECT Amount FROM aro_allotment WHERE ID=@ID", sqlCon)
+            'cmd.Parameters.AddWithValue("@ID", id)
+            'rdr = cmd.ExecuteReader()
+            'If rdr.HasRows Then
+            '    rdr.Read()
+            '    value = String.Format("{0:N2}", rdr.Item("Amount"))
+            '    MsgBox("Allotment : " & value)
+            'End If
+            deleteAppropriationID(id)
+            deleteAllotmentID(id)
+            Dim augsqlquery = ("DELETE FROM ARO_Augmentation WHERE id=@UID")
+            deleteAdjustmentID(id, augsqlquery)
+            Dim revsqlquery = ("DELETE FROM ARO_Reversion WHERE id=@UID")
+            deleteAdjustmentID(id, revsqlquery)
+            Dim sbsqlquery = ("DELETE FROM ARO_SupplementalBudget WHERE id=@UID")
+            deleteAdjustmentID(id, sbsqlquery)
+            ClsConn.CloseConnection()
+        End If
+        'Return Value
     End Sub
 End Class

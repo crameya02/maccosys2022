@@ -352,6 +352,7 @@ Partial Class frmOBRE_OtherDetails
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.FormStyle = MaterialSkin.Controls.MaterialForm.FormStyles.StatusAndActionBar_None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmOBRE_OtherDetails"
         Me.Padding = New System.Windows.Forms.Padding(0)
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

@@ -169,7 +169,6 @@ Partial Class frmOBRE
         Me.btnSave.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnSave.UseAccentColor = False
         Me.btnSave.UseVisualStyleBackColor = False
-        Me.btnSave.Visible = False
         '
         'btnUpdate
         '
@@ -189,6 +188,7 @@ Partial Class frmOBRE
         Me.btnUpdate.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnUpdate.UseAccentColor = False
         Me.btnUpdate.UseVisualStyleBackColor = True
+        Me.btnUpdate.Visible = False
         '
         'btnDelete
         '
@@ -427,6 +427,7 @@ Partial Class frmOBRE
         Me.UNIQUEID.HeaderText = "UID"
         Me.UNIQUEID.MinimumWidth = 6
         Me.UNIQUEID.Name = "UNIQUEID"
+        Me.UNIQUEID.Visible = False
         '
         'frmOBRE
         '
@@ -437,6 +438,7 @@ Partial Class frmOBRE
         Me.Controls.Add(Me.txtbxFLP)
         Me.Controls.Add(Me.btnsFLP)
         Me.FormStyle = MaterialSkin.Controls.MaterialForm.FormStyles.StatusAndActionBar_None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmOBRE"
         Me.Padding = New System.Windows.Forms.Padding(0)
         Me.ShowIcon = False

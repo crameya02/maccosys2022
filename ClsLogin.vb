@@ -23,11 +23,11 @@ Public Class ClsLogin
                 Dim rdr As SqlDataReader
                 rdr = cmd.ExecuteReader()
                 If rdr.Read() Then
-                    userRole = rdr.GetValue(2).ToString
-                    'dashboard.UserType.Text = rdr.GetValue(0).ToString.Trim
-                    Dim st As String = "Successfully logged in" & userRole
+                    userRole = rdr.GetValue(2).ToString.Trim
+                    'DashBoard.UserType.Text = rdr.GetValue(2).ToString.Trim
+                    Dim st As String = "Successfully logged in " & userRole
                     'LogFunc(UserID.Text, st)
-                    ' MsgBox(st)
+                    'MsgBox(st)
                     login.Hide()
                     DashBoard.Show()
                     ' login.Timer1.Enabled = False

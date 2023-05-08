@@ -2,6 +2,7 @@
 Partial Class frmARO_Adjustments
     Inherits MaterialSkin.Controls.MaterialForm
 
+
     'Form overrides dispose to clean up the component list.
     <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
@@ -22,6 +23,7 @@ Partial Class frmARO_Adjustments
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmARO_Adjustments))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -47,17 +49,14 @@ Partial Class frmARO_Adjustments
         Me.Appropriation = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.UNIQUEID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Augmentation = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UUID_Aug = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Aug_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Reversion = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UUID_Rev = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Rev_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SupplementalBudget = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UUID_SB = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SB_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.EditSelectedItemToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnsFLP.SuspendLayout()
         Me.txtbxFLP.SuspendLayout()
         CType(Me.ARODGV, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ContextMenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'btnsFLP
@@ -139,6 +138,7 @@ Partial Class frmARO_Adjustments
         Me.btnUpdate.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnUpdate.UseAccentColor = False
         Me.btnUpdate.UseVisualStyleBackColor = True
+        Me.btnUpdate.Visible = False
         '
         'btnDelete
         '
@@ -178,6 +178,7 @@ Partial Class frmARO_Adjustments
         Me.btnPrint.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnPrint.UseAccentColor = False
         Me.btnPrint.UseVisualStyleBackColor = True
+        Me.btnPrint.Visible = False
         '
         'btnExport
         '
@@ -197,6 +198,7 @@ Partial Class frmARO_Adjustments
         Me.btnExport.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnExport.UseAccentColor = False
         Me.btnExport.UseVisualStyleBackColor = True
+        Me.btnExport.Visible = False
         '
         'btnGetData
         '
@@ -235,6 +237,7 @@ Partial Class frmARO_Adjustments
         Me.btnImport.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Text
         Me.btnImport.UseAccentColor = False
         Me.btnImport.UseVisualStyleBackColor = True
+        Me.btnImport.Visible = False
         '
         'btnOption
         '
@@ -344,6 +347,8 @@ Partial Class frmARO_Adjustments
         '
         'txtOffice
         '
+        Me.txtOffice.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtOffice.AnimateReadOnly = False
         Me.txtOffice.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtOffice.Depth = 0
@@ -382,7 +387,7 @@ Partial Class frmARO_Adjustments
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.ARODGV.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.ARODGV.ColumnHeadersHeight = 40
-        Me.ARODGV.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.AccountCode, Me.Description, Me.Appropriation, Me.UNIQUEID, Me.Augmentation, Me.UUID_Aug, Me.Aug_Remarks, Me.Reversion, Me.UUID_Rev, Me.Rev_Remarks, Me.SupplementalBudget, Me.UUID_SB, Me.SB_Remarks})
+        Me.ARODGV.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.AccountCode, Me.Description, Me.Appropriation, Me.UNIQUEID, Me.Augmentation, Me.Reversion, Me.SupplementalBudget})
         Me.ARODGV.CurrentTheme.AlternatingRowsStyle.BackColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(56, Byte), Integer), CType(CType(62, Byte), Integer))
         Me.ARODGV.CurrentTheme.AlternatingRowsStyle.Font = New System.Drawing.Font("Segoe UI Semibold", 9.75!, System.Drawing.FontStyle.Bold)
         Me.ARODGV.CurrentTheme.AlternatingRowsStyle.ForeColor = System.Drawing.Color.White
@@ -456,60 +461,35 @@ Partial Class frmARO_Adjustments
         Me.Augmentation.HeaderText = "Augmentation"
         Me.Augmentation.MinimumWidth = 6
         Me.Augmentation.Name = "Augmentation"
-        '
-        'UUID_Aug
-        '
-        Me.UUID_Aug.HeaderText = "UUID_Aug"
-        Me.UUID_Aug.MinimumWidth = 6
-        Me.UUID_Aug.Name = "UUID_Aug"
-        Me.UUID_Aug.ReadOnly = True
-        Me.UUID_Aug.Visible = False
-        '
-        'Aug_Remarks
-        '
-        Me.Aug_Remarks.HeaderText = "Remarks"
-        Me.Aug_Remarks.MinimumWidth = 6
-        Me.Aug_Remarks.Name = "Aug_Remarks"
+        Me.Augmentation.ReadOnly = True
         '
         'Reversion
         '
         Me.Reversion.HeaderText = "Reversion"
         Me.Reversion.MinimumWidth = 6
         Me.Reversion.Name = "Reversion"
-        '
-        'UUID_Rev
-        '
-        Me.UUID_Rev.HeaderText = "UUID_Rev"
-        Me.UUID_Rev.MinimumWidth = 6
-        Me.UUID_Rev.Name = "UUID_Rev"
-        Me.UUID_Rev.ReadOnly = True
-        Me.UUID_Rev.Visible = False
-        '
-        'Rev_Remarks
-        '
-        Me.Rev_Remarks.HeaderText = "Remarks"
-        Me.Rev_Remarks.MinimumWidth = 6
-        Me.Rev_Remarks.Name = "Rev_Remarks"
+        Me.Reversion.ReadOnly = True
         '
         'SupplementalBudget
         '
         Me.SupplementalBudget.HeaderText = "Supplemental Budget"
         Me.SupplementalBudget.MinimumWidth = 6
         Me.SupplementalBudget.Name = "SupplementalBudget"
+        Me.SupplementalBudget.ReadOnly = True
         '
-        'UUID_SB
+        'ContextMenuStrip1
         '
-        Me.UUID_SB.HeaderText = "UUID_SB"
-        Me.UUID_SB.MinimumWidth = 6
-        Me.UUID_SB.Name = "UUID_SB"
-        Me.UUID_SB.ReadOnly = True
-        Me.UUID_SB.Visible = False
+        Me.ContextMenuStrip1.ImageScalingSize = New System.Drawing.Size(20, 20)
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EditSelectedItemToolStripMenuItem})
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(204, 30)
         '
-        'SB_Remarks
+        'EditSelectedItemToolStripMenuItem
         '
-        Me.SB_Remarks.HeaderText = "Remarks"
-        Me.SB_Remarks.MinimumWidth = 6
-        Me.SB_Remarks.Name = "SB_Remarks"
+        Me.EditSelectedItemToolStripMenuItem.Image = Global.maccosys2022.My.Resources.Resources.icons8_edit_24_dark
+        Me.EditSelectedItemToolStripMenuItem.Name = "EditSelectedItemToolStripMenuItem"
+        Me.EditSelectedItemToolStripMenuItem.Size = New System.Drawing.Size(203, 26)
+        Me.EditSelectedItemToolStripMenuItem.Text = "Edit Selected Item"
         '
         'frmARO_Adjustments
         '
@@ -520,6 +500,7 @@ Partial Class frmARO_Adjustments
         Me.Controls.Add(Me.txtbxFLP)
         Me.Controls.Add(Me.btnsFLP)
         Me.FormStyle = MaterialSkin.Controls.MaterialForm.FormStyles.StatusAndActionBar_None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmARO_Adjustments"
         Me.Padding = New System.Windows.Forms.Padding(0)
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -528,6 +509,7 @@ Partial Class frmARO_Adjustments
         Me.btnsFLP.PerformLayout()
         Me.txtbxFLP.ResumeLayout(False)
         CType(Me.ARODGV, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ContextMenuStrip1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -548,17 +530,13 @@ Partial Class frmARO_Adjustments
     Friend WithEvents cmbOffice As MaterialSkin.Controls.MaterialComboBox
     Friend WithEvents txtOffice As MaterialSkin.Controls.MaterialTextBox
     Friend WithEvents ARODGV As Bunifu.UI.WinForms.BunifuDataGridView
+    Friend WithEvents ContextMenuStrip1 As ContextMenuStrip
+    Friend WithEvents EditSelectedItemToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AccountCode As DataGridViewTextBoxColumn
     Friend WithEvents Description As DataGridViewTextBoxColumn
     Friend WithEvents Appropriation As DataGridViewTextBoxColumn
     Friend WithEvents UNIQUEID As DataGridViewTextBoxColumn
     Friend WithEvents Augmentation As DataGridViewTextBoxColumn
-    Friend WithEvents UUID_Aug As DataGridViewTextBoxColumn
-    Friend WithEvents Aug_Remarks As DataGridViewTextBoxColumn
     Friend WithEvents Reversion As DataGridViewTextBoxColumn
-    Friend WithEvents UUID_Rev As DataGridViewTextBoxColumn
-    Friend WithEvents Rev_Remarks As DataGridViewTextBoxColumn
     Friend WithEvents SupplementalBudget As DataGridViewTextBoxColumn
-    Friend WithEvents UUID_SB As DataGridViewTextBoxColumn
-    Friend WithEvents SB_Remarks As DataGridViewTextBoxColumn
 End Class

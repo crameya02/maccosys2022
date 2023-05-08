@@ -14,6 +14,10 @@ Imports Microsoft.SqlServer.Management.Smo
 Imports MaterialSkin.Controls
 Imports CrystalDecisions.ReportAppServer.DataDefModel
 Imports System.Windows.Interop
+Imports Microsoft.Office.Interop
+
+Imports Excel = Microsoft.Office.Interop.Excel
+Imports DataSet = System.Data.DataSet
 
 Public Class frmSAAOB
     Public Sub ShowSAAOB502()
@@ -376,7 +380,7 @@ FROM Totals;"
     End Sub
 
     Private Sub btnPrint_Click(sender As Object, e As EventArgs) Handles btnPrint.Click
-        frmSAAOB_Print_Option.ShowDialog()
+        frmSAAOB_Print_Option.Show()
     End Sub
 
     Private Sub MaterialListView1_SelectedIndexChanged(sender As Object, e As EventArgs)
@@ -408,7 +412,7 @@ FROM Totals;"
             End If
             'MsgBox(searchoffice & " found in group " & foundIndex + 1)
         Else
-                MsgBox(searchoffice & " not found")
+            MsgBox(searchoffice & " not found")
         End If
 
         'Dim GroupColors As String()() = New String(1)() {}
@@ -434,4 +438,7 @@ FROM Totals;"
         'End If
 
     End Sub
+
+
+
 End Class

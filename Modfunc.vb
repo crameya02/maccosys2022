@@ -9,6 +9,7 @@ Imports Excel = Microsoft.Office.Interop.Excel
 Imports System.Net.Mail
 Imports Microsoft.Office.Interop.Excel
 Imports Bunifu.UI.WinForms
+Imports System.Globalization
 
 Module ModFunc
     Public Function CheckForInternetConnection() As Boolean
@@ -367,5 +368,39 @@ Module ModFunc
         flp.Controls.Add(frm)
         frm.Show()
     End Sub
+    Public Function ReadWorkingYear() As String
+        Dim defaultAppPath As String = Path.Combine(Directory.GetCurrentDirectory(), "Setting")
+        Dim mySettings As String = Path.Combine(defaultAppPath, "Settings.ini")
+
+        If Not Directory.Exists(defaultAppPath) Then
+            Directory.CreateDirectory(defaultAppPath)
+        End If
+
+        Dim objIniFile As New ClsIni(mySettings)
+        Dim readYear As String = objIniFile.GetString("SAAOB", "year", "")
+
+        If readYear = "" Then
+            objIniFile.WriteString("SAAOB", "year", Now.Year.ToString)
+            readYear = objIniFile.GetString("SAAOB", "year", "")
+        End If
+
+        Return readYear
+    End Function
+
+
+    Public Function GetCurrentMonthDates(today As DateTime) As (currentBeginningDate As String, currentEndingDate As String, previousBeginningDate As String, previousEndingDate As String)
+        Dim currentFirstDayOfMonth As DateTime = New DateTime(today.Year, today.Month, 1)
+        Dim currentLastDayOfMonth As DateTime = currentFirstDayOfMonth.AddMonths(1).AddDays(-1)
+        Dim currentBeginningDate As String = currentFirstDayOfMonth.ToString("MM/dd/yyyy")
+        Dim currentEndingDate As String = currentLastDayOfMonth.ToString("MM/dd/yyyy")
+
+        Dim previousFirstDayOfMonth As DateTime = currentFirstDayOfMonth.AddMonths(-1)
+        Dim previousLastDayOfMonth As DateTime = currentFirstDayOfMonth.AddDays(-1)
+        Dim previousBeginningDate As String = previousFirstDayOfMonth.ToString("MM/dd/yyyy")
+        Dim previousEndingDate As String = previousLastDayOfMonth.ToString("MM/dd/yyyy")
+
+        Return (currentBeginningDate, currentEndingDate, previousBeginningDate, previousEndingDate)
+    End Function
+
 
 End Module
